@@ -2,8 +2,6 @@
 import JewelryProductCard from "@/component/JewelryProductCard";
 import Navbar from "@/component/Navbar";
 import {CartStore} from "@/store/useCartStore";
-import ButtonAtoms from "@/atoms/ButtonAtoms";
-import About from "@/app/about/page";
 import Hero from "@/component/Hero";
 export default function Home() {
   const {name, price, material, category } = CartStore();
