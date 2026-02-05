@@ -5,7 +5,7 @@ export default function FilterSidebar() {
   const [price, setPrice] = useState(1000000);
 
   return (
-    <div className="w-65 rounded-2xl bg-white p-5 shadow-md">
+    <div className="w-65 rounded-2xl bg-white p-5 shadow-md text-black">
       {/* Title */}
       <h2 className="mb-4 text-lg font-bold">Filters</h2>
 
@@ -24,7 +24,7 @@ export default function FilterSidebar() {
         />
 
         <p className="mt-2 text-sm text-gray-600">
-          Up to ₹{price.toLocaleString()}
+          Up to ₹{price}
         </p>
       </div>
 

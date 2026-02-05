@@ -1,10 +1,11 @@
 "use client";
 import React, { useRef, useState, useEffect } from "react";
-
+import { base64ToFile } from "@/utils/base64tofile";
+import { HandwrittenImageStore } from "@/store/HandwrittenImageStore";
 export default function DrawJewelryComponent() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
-
+  const { setHandwrittenImageFile } = HandwrittenImageStore();
   const [drawing, setDrawing] = useState(false);
   const [mode, setMode] = useState<"pen" | "eraser">("pen");
   const [history, setHistory] = useState<ImageData[]>([]);
@@ -71,6 +72,13 @@ export default function DrawJewelryComponent() {
     const image = canvasRef.current?.toDataURL("image/png");
     console.log("Canvas Image:", image);
     // 👉 Send this image to backend → CLIP → Vector DB
+    const canvas = canvasRef.current;
+     if (!canvas) return;
+     const base64 = canvas.toDataURL("image/png");
+     const file = base64ToFile(base64, "handwritten-note.png");
+     setHandwrittenImageFile(file);
+
+  console.log("Saved canvas image as File:", file);
   };
 
   return (
@@ -82,7 +90,7 @@ export default function DrawJewelryComponent() {
       {/* Canvas */}
       <canvas
         ref={canvasRef}
-        className="rounded-xl border border-gray-200 bg-white"
+        className="rounded-xl border border-[#000] bg-white"
         onMouseDown={startDraw}
         onMouseMove={draw}
         onMouseUp={stopDraw}

@@ -1,21 +1,30 @@
 "use client";
 import React, { useState } from "react";
+import { TestInputStore } from "@/store/TextInputStore"; 
+
+
 
 export default function QueryComponent() {
+
   const [input, setInput] = useState("");
+  const setTestInput = TestInputStore((state) => state.setTestInput);
+  const testInput = TestInputStore((state) => state.testInput);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInput(e.target.value);
+    setInput(e.target.value); 
   };
-  const handleSearch = () => {
+  
+  const handleSearch = (e:React.ChangeEvent<HTMLInputElement>) => {
     console.log("User query:", input);
+    setTestInput(e.target.value);
+    console.log("Current input:",testInput);
   };
 
   return (
     <>
       <div className="flex flex-col w-[80%] h-56.25 bg-[#FFFFFF] rounded-[15px] justify-center px-8">
 
-        <p className="mb-2 font-bold">What are you looking for?</p>
+        <p className="mb-2 font-bold text-black text-left">What are you looking for?</p>
 
         <div className="flex flex-col h-30 justify-between">
           <input
