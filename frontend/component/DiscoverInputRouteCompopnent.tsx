@@ -1,5 +1,4 @@
 "use client";
-import { useState } from "react";
 
 import { selectInputStore } from "@/store/InputRouteStore";
 
@@ -20,7 +19,7 @@ export default function SearchTabs() {
   );
 
   return (
-    <div className="w-[700px] bg-[#FBF8F2] border-b border-[#959595]">
+    <div className="w-175 bg-[#FBF8F2] border-b border-[#959595]">
       <div className="flex gap-10 px-10">
         {tabs.map((tab) => (
           <button

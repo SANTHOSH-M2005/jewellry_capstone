@@ -54,7 +54,6 @@ export default function DrawJewelryComponent() {
 
   const undo = () => {
     if (history.length === 0) return;
-    const canvas = canvasRef.current!;
     const ctx = ctxRef.current!;
     const prev = history[history.length - 1];
     ctx.putImageData(prev, 0, 0);
@@ -90,7 +89,7 @@ export default function DrawJewelryComponent() {
       {/* Canvas */}
       <canvas
         ref={canvasRef}
-        className="rounded-xl border border-[#000] bg-white"
+        className="rounded-xl border border-[#000000] bg-white"
         onMouseDown={startDraw}
         onMouseMove={draw}
         onMouseUp={stopDraw}
