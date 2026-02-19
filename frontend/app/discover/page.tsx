@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 
+import Navbar from "@/component/Navbar";
 import QueryComponent from "@/component/QueryComponent";
 import ImageSearchComponent from "@/component/ImageSearchComponent";
 import DrawJewelryComponent from "@/component/DrawJewelryComponent";
@@ -14,13 +15,13 @@ export default function Discover() {
 
   const inputType = selectInputStore((state) => state.inputType);
 
-  const { handwrittenImageFile, setHandwrittenImageFile } = HandwrittenImageStore();
-  const { imageFile, setImageFile } = ImageInputStore();
+  const { handwrittenImageFile, setHandwrittenImageFile,setHandWrittenRecommended } = HandwrittenImageStore();
+  const { imageFile, setImageFile , setRecommended} = ImageInputStore();
 
   
   return (
     <div>
-      <div className="bg-amber-200 h-18 w-full shadow-md"></div>
+      <Navbar/>
 
       {/* title of Discover page */}
       <center>
@@ -45,7 +46,7 @@ export default function Discover() {
       <center>
         {inputType === "image" && (
           <div className="mt-10">
-            <ImageSearchComponent file={imageFile} setFile={setImageFile} visible={true}/>
+            <ImageSearchComponent file={imageFile} setFile={setImageFile} visible={true} setRecommended={setRecommended}/>
           </div>
         )}
       </center>
@@ -59,7 +60,7 @@ export default function Discover() {
       <center>
         {inputType === "hand" && (
           <div className="mt-10">
-            <ImageSearchComponent  file={handwrittenImageFile} setFile={setHandwrittenImageFile} visible={true}/>
+            <ImageSearchComponent  file={handwrittenImageFile} setFile={setHandwrittenImageFile} visible={true} setRecommended={setHandWrittenRecommended}/>
           </div>
         )}
       </center>

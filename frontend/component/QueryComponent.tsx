@@ -1,24 +1,51 @@
 "use client";
 import React, { useState } from "react";
 import { TestInputStore } from "@/store/TextInputStore"; 
-
+import { sendText } from "@/utils/TextImageApi";
+import { useRouter } from "next/navigation";
 
 
 export default function QueryComponent() {
 
   const [input, setInput] = useState("");
+  const router = useRouter();
   const setTestInput = TestInputStore((state) => state.setTestInput);
-  const testInput = TestInputStore((state) => state.testInput);
+  const setRecommended = TestInputStore((state) => state.setRecommended);
+  
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInput(e.target.value); 
   };
   
-  const handleSearch = (e:React.ChangeEvent<HTMLInputElement>) => {
-    console.log("User query:", input);
-    setTestInput(e.target.value);
-    console.log("Current input:",testInput);
+  const getRandomPrice = () => {
+    const price = Math.floor(Math.random() * (30000 - 20000 + 1)) + 20000;
+    return `₹ ${price.toLocaleString("en-IN")}`;
   };
+
+  const handleSearch = async () => {
+    console.log("User query:", input);
+    setTestInput(input); // store in Zustand if needed
+
+  try {
+    const data = await sendText(input);
+    console.log("Data from backend:", data);
+
+     const formatted = data.results.map((item: any, index: number) => ({
+        id: index,
+        name: item.image_name,
+        imageUrl: item.image_url,
+        category: item.category,
+        material: "Gold",
+        price: getRandomPrice(),
+      }));
+
+      setRecommended(formatted);
+      router.push("/test");// Update Zustand with recommended items
+      
+  } catch (err) {
+    console.error("Search failed:", err);
+  }
+};
 
   return (
     <>

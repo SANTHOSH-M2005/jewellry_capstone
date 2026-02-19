@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 
+import Navbar from "@/component/Navbar";
 import ImageSearchComponent from "@/component/ImageSearchComponent";
 import AddJewelryMetadata from "@/component/AddJewelryMetadata";
 
@@ -13,7 +14,7 @@ export default function Page() {
 
   return (
     <div>
-      <div className="bg-amber-200 h-18 w-full shadow-md"></div>
+      <Navbar />
       <div className="">
 
         <center className="mt-10">

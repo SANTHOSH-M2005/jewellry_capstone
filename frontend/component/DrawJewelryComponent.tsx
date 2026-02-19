@@ -1,14 +1,17 @@
 "use client";
 import React, { useRef, useState, useEffect } from "react";
 import { base64ToFile } from "@/utils/base64tofile";
-import { HandwrittenImageStore } from "@/store/HandwrittenImageStore";
+import { DrawingImageStore } from "@/store/DrawingImageStore";
+import { sendDrawFile } from "@/utils/DrawingImageapi";
+import { useRouter } from "next/navigation";
 export default function DrawJewelryComponent() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
-  const { setHandwrittenImageFile } = HandwrittenImageStore();
+  const { setDrawingImageFile,setDrawingImageRecommended} = DrawingImageStore();
   const [drawing, setDrawing] = useState(false);
   const [mode, setMode] = useState<"pen" | "eraser">("pen");
   const [history, setHistory] = useState<ImageData[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
     const canvas = canvasRef.current!;
@@ -49,7 +52,10 @@ export default function DrawJewelryComponent() {
   const saveHistory = () => {
     const canvas = canvasRef.current!;
     const ctx = ctxRef.current!;
-    setHistory((prev) => [...prev, ctx.getImageData(0, 0, canvas.width, canvas.height)]);
+    setHistory((prev) => [
+      ...prev,
+      ctx.getImageData(0, 0, canvas.width, canvas.height),
+    ]);
   };
 
   const undo = () => {
@@ -67,17 +73,41 @@ export default function DrawJewelryComponent() {
     setHistory([]);
   };
 
-  const handleSearch = () => {
+   const getRandomPrice = () => {
+    const price = Math.floor(Math.random() * (30000 - 20000 + 1)) + 20000;
+    return `₹ ${price.toLocaleString("en-IN")}`;
+  };
+
+  const handleSearch = async () => {
     const image = canvasRef.current?.toDataURL("image/png");
     console.log("Canvas Image:", image);
     // 👉 Send this image to backend → CLIP → Vector DB
     const canvas = canvasRef.current;
-     if (!canvas) return;
-     const base64 = canvas.toDataURL("image/png");
-     const file = base64ToFile(base64, "handwritten-note.png");
-     setHandwrittenImageFile(file);
+    if (!canvas) return;
+    const base64 = canvas.toDataURL("image/png");
+    const file = base64ToFile(base64, "handwritten-note.png");
+    setDrawingImageFile(file);
 
-  console.log("Saved canvas image as File:", file);
+    try {
+      const data = await sendDrawFile(file);
+      console.log("Data from backend:", data);
+
+      const formatted = data.results.map((item: any, index: number) => ({
+        id: index,
+        name: item.image_name,
+        imageUrl: item.image_url,
+        category: item.category,
+        material: "Gold",
+        price: getRandomPrice(),
+      }));
+
+      setDrawingImageRecommended(formatted);
+      router.push("/test"); // Update Zustand with recommended items
+    } catch (err) {
+      console.error("Search failed:", err);
+    }
+
+    console.log("Saved canvas image as File:", file);
   };
 
   return (

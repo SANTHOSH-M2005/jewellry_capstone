@@ -1,27 +1,32 @@
 "use client";
 import ButtonAtom from "@/atoms/ButtonAtom";
 import React, { useRef } from "react";
+import { sendfile } from "@/utils/ImageUploadapi";
+import { useRouter } from "next/navigation";
 
 
+type CartItem = {
+  id: number;
+  name: string;
+  imageUrl: string;
+};
 
 type ImageUploadBoxProps = {
   file: File | null;
   setFile: (file: File | null) => void;
   title?: string;
   visible?: boolean;
+  setRecommended: (recommended: CartItem[]) => void;
 };
 
-
-export default function ImageSearchComponent(ImageUploadBoxProps: ImageUploadBoxProps) {
-
+export default function ImageSearchComponent(ImageUploadBoxProps: ImageUploadBoxProps,) {
+  const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const { file, setFile,visible} = ImageUploadBoxProps;
+  const { file, setFile, visible, setRecommended } =ImageUploadBoxProps;
 
-
-
-if (file) {
-    console.log(file.name);
-    console.log(file.type);
+  if (file) {
+    // console.log(file.name);
+    // console.log(file.type);
   }
 
   const handleClick = () => {
@@ -32,13 +37,38 @@ if (file) {
     const file = e.target.files?.[0] || null;
     if (file) {
       setFile(file);
-      console.log("Selected file:", file);
+      // console.log("Selected file:", file);
+    }
+  };
+
+  const getRandomPrice = () => {
+    const price = Math.floor(Math.random() * (30000 - 20000 + 1)) + 20000;
+    return `₹ ${price.toLocaleString("en-IN")}`;
+  };
+
+  const handleSearch = async () => {
+    // Implement your search logic here using the selected file
+    // console.log("Searching with file:", file);
+    if (file) {
+      const data = await sendfile(file);
+      console.log("Response from API:", data);
+
+      const formatted = data.results.map((item: any, index: number) => ({
+        id: index,
+        name: item.image_name,
+        imageUrl: item.image_url,
+        category: item.category,
+        material: "Gold",
+        price: getRandomPrice(),
+      }));
+
+      setRecommended(formatted);
+      router.push("/test");
     }
   };
 
   return (
     <div className="w-full max-w-5xl rounded-2xl bg-white p-6 shadow-md">
-
       {/* Upload Area */}
       <div
         onClick={handleClick}
@@ -49,7 +79,6 @@ if (file) {
               : "border-gray-300 hover:border-yellow-500"
           }`}
       >
-
         {/* Icon */}
         <div
           className={`mb-3 flex h-12 w-12 items-center justify-center rounded-full
@@ -90,7 +119,7 @@ if (file) {
       </div>
 
       {/* Search Button */}
-      {visible && <ButtonAtom />}
+      {visible && <ButtonAtom handleSearch={handleSearch} />}
     </div>
   );
 }

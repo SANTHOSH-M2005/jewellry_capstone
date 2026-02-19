@@ -24,24 +24,28 @@ export default function Home() {
             name={name}
             material={material}
             price={price.toString()}
+            imageUrl="/necklace/necklace_1.jpg"
           />
            <JewelryProductCard
             category={category}
             name={name}
             material={material}
             price={price.toString()}
+            imageUrl="/necklace/necklace_2.jpg"
           />
            <JewelryProductCard
             category={category}
             name={name}
             material={material}
             price={price.toString()}
+            imageUrl="/necklace/necklace_3.jpg"
           />
            <JewelryProductCard
             category={category}
             name={name}
             material={material}
             price={price.toString()}
+            imageUrl="/necklace/necklace_4.jpg"
           />
 
           {/* You can map multiple cards here */}

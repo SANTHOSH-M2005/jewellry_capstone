@@ -9,7 +9,7 @@ export default function Navbar() {
   return (
     <nav
       className="
-        sticky top-0 z-[100]
+        sticky top-0 z-100
         bg-[rgba(250,248,243,0.95)]
         backdrop-blur-md
         border-b border-[#e8e6e1]

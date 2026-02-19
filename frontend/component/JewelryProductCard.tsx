@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 import Image from "next/image";
 
 type JewelryCardProps = {
@@ -13,6 +15,10 @@ type JewelryCardProps = {
 export default function JewelryCard(JewelryCardProps: JewelryCardProps) {
   
   const { imageUrl, category, name, material, price } = JewelryCardProps;
+  console.log("JewelryCard rendering for:", name, "URL:", imageUrl);
+  const image = "/necklace/necklace_1.jpg";
+  const [imgError, setImgError] = useState(false);
+  console.log("Image URL:", imageUrl);
 
   return (
     <div
@@ -28,21 +34,26 @@ export default function JewelryCard(JewelryCardProps: JewelryCardProps) {
     >
       {/* Image */}
       <div
-        className="
+        className="   
+          relative
           w-full h-70
           bg-[linear-gradient(135deg,#f5f2ed_0%,#e8e6e1_100%)]
-          flex items-center justify-center
+         
           overflow-hidden
         "
       >
-        {imageUrl && (
+        {imageUrl ? (
           <Image
-            src={imageUrl}
+            src={imageUrl?imageUrl:"image"}
             alt={name}
-            width={140}
-            height={140}
-            className="object-contain"
+            fill
+            className="object-cover"
+            onError={() => setImgError(true)}
           />
+        ) : (
+          <div className="flex items-center justify-center w-full h-full bg-gray-200">
+            <span className="text-gray-400">No Image</span>
+          </div>
         )}
       </div>
 
